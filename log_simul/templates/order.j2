@@ -1,0 +1,5 @@
+[{{ timestamp.strftime('%Y-%m-%d %H:%M:%S') }}]  {{ level }} {{ pid }} --- [{{ thread }}] {{ logger.ljust(40) }} : {% if level == "INFO" -%}
+Received order request - userId={{ user_id }}, productId={{ product_id }}
+{%- else -%}
+Failed to create order - productId={{ product_id }}, reason=out of stock
+{%- endif %}

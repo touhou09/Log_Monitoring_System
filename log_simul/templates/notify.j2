@@ -1,0 +1,5 @@
+[{{ timestamp.strftime('%Y-%m-%d %H:%M:%S') }}]  {{ level }} {{ pid }} --- [{{ thread }}] {{ logger.ljust(40) }} : {% if level == "INFO" -%}
+Notification sent - userId={{ user_id }}, type={{ notif_type }}
+{%- else -%}
+Notification failed - userId={{ user_id }}, type={{ notif_type }}, reason=network error
+{%- endif %}

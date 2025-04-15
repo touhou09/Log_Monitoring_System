@@ -1,0 +1,5 @@
+[{{ timestamp.strftime('%Y-%m-%d %H:%M:%S') }}]  {{ level }} {{ pid }} --- [{{ thread }}] {{ logger.ljust(40) }} : {% if level == "INFO" -%}
+Inventory check passed - itemId={{ item_id }}, remaining={{ remaining }}
+{%- else -%}
+Low stock warning - itemId={{ item_id }}, remaining={{ remaining }}
+{%- endif %}

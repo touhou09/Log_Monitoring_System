@@ -1,0 +1,5 @@
+[{{ timestamp.strftime('%Y-%m-%d %H:%M:%S') }}]  {{ level }} {{ pid }} --- [{{ thread }}] {{ logger.ljust(40) }} : {% if level == "INFO" -%}
+{{ domain.title() }} action completed successfully
+{%- else -%}
+{{ domain.title() }} operation failed - reason=unexpected error
+{%- endif %}

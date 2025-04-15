@@ -1,0 +1,7 @@
+*/__pycache__
+log_simul/api/__pycache__
+log_simul/output_plugins/__pycache__
+log_simul/simulator/__pycache__
+/__pycache__/main.cpython-312.pyc
+*.pid
+*.log

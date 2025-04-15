@@ -1,0 +1,5 @@
+[{{ timestamp.strftime('%Y-%m-%d %H:%M:%S') }}]  {{ level }} {{ pid }} --- [{{ thread }}] {{ logger.ljust(40) }} : {% if level == "INFO" -%}
+Payment processed successfully - userId={{ user_id }}, amount={{ amount }}
+{%- else -%}
+Payment failed - userId={{ user_id }}, reason=card declined
+{%- endif %}

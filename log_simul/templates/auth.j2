@@ -1,0 +1,5 @@
+[{{ timestamp.strftime('%Y-%m-%d %H:%M:%S') }}]  {{ level }} {{ pid }} --- [{{ thread }}] {{ logger.ljust(40) }} : {% if level == "INFO" -%}
+User login success - userId={{ user_id }}
+{%- else -%}
+Login failed - userId={{ user_id }}, reason=invalid credentials
+{%- endif %}
