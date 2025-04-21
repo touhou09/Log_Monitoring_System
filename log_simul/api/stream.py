@@ -2,8 +2,10 @@ from fastapi import APIRouter
 from fastapi.responses import StreamingResponse
 from stream_queue import register_stream_queue
 import asyncio
+import logging
 
 router = APIRouter()
+logger = logging.getLogger("uvicorn.access")
 
 @router.get("/stream/{service}")
 async def stream_logs(service: str):

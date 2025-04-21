@@ -18,18 +18,6 @@ services:
     volumes:
       - kafka_data:/bitnami/kafka
 
-  fluentd:
-    build:
-      context: ./fluentd
-    container_name: fluentd
-    volumes:
-      - ./fluentd/conf:/fluentd/etc
-    ports:
-      - "24224:24224"
-      - "24224:24224/udp"
-    depends_on:
-      - kafka
-
   flink-jobmanager:
     image: flink:1.17
     container_name: flink-jobmanager
@@ -79,7 +67,27 @@ services:
       - 8.8.8.8
       - 1.1.1.1
 
+  log_simulator:
+    build:
+      context: ./log_simul
+    container_name: log_simulator
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./log_simul:/app
+    working_dir: /app
+    command: python run.py
+    depends_on:
+      - kafka
 
+  log_forwarder:
+    build:
+      context: ./log_forwarder
+    container_name: log_forwarder
+    depends_on:
+      - kafka
+      - log_simulator  # FastAPI 스트리밍 API
+    restart: always
 
 volumes:
   kafka_data:
