@@ -18,30 +18,38 @@ services:
     volumes:
       - kafka_data:/bitnami/kafka
 
-  flink-jobmanager:
-    image: flink:1.17
-    container_name: flink-jobmanager
-    command: jobmanager
-    ports:
-      - "8081:8081"
+  spark-master:
+    image: bitnami/spark:3.5
+    container_name: spark-master
     environment:
-      - |
-        FLINK_PROPERTIES=
-        jobmanager.rpc.address: flink-jobmanager
+      - SPARK_MODE=master
+    ports:
+      - "7077:7077"
+      - "8080:8080"
     depends_on:
       - kafka
 
-  flink-taskmanager:
-    image: flink:1.17
-    container_name: flink-taskmanager
-    command: taskmanager
-    depends_on:
-      - flink-jobmanager
+  spark-worker:
+    image: bitnami/spark:3.5
+    container_name: spark-worker
     environment:
-      - |
-        FLINK_PROPERTIES=
-        jobmanager.rpc.address: flink-jobmanager
-        taskmanager.numberOfTaskSlots: 2
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+    depends_on:
+      - spark-master
+
+  spark-streaming-app:
+    build:
+      context: ./spark_job
+    container_name: spark-streaming-app
+    depends_on:
+      - spark-master
+      - kafka
+    command: >
+      /opt/bitnami/spark/bin/spark-submit
+      --master spark://spark-master:7077
+      --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0
+      app.py
 
   clickhouse:
     image: clickhouse/clickhouse-server:23.3

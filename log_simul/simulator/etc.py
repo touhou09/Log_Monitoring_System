@@ -1,18 +1,20 @@
-import random
+from faker import Faker
 from datetime import datetime
 from simulator.base import SimulatorBase
+
+fake = Faker()
 
 class EtcSimulator(SimulatorBase):
     def __init__(self):
         super().__init__("etc.j2")
 
     def generate_log(self, now: datetime) -> dict:
-        domain = random.choice(["product", "review", "coupon"])
+        domain = fake.random_element(["product", "review", "coupon"])
         return {
             "timestamp": now,
-            "level": random.choices(["INFO", "ERROR"], weights=[90, 10])[0],
-            "pid": random.randint(10000, 99999),
-            "thread": f"nio-8080-exec-{random.randint(1, 10)}",
+            "level": fake.random_element(["INFO"] * 9 + ["ERROR"]),
+            "pid": fake.random_int(10000, 99999),
+            "thread": f"nio-8080-exec-{fake.random_int(1, 10)}",
             "logger": f"c.ecommerce.{domain}.{domain.title()}Service",
             "domain": domain
         }
