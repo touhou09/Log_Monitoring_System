@@ -1,8 +1,9 @@
 FROM bitnami/spark:3.5
 
 WORKDIR /app
+ENV PYTHONPATH="/app"
 
-COPY app.py /app/app.py
+COPY . /app
 
 # 추가 패키지 설치 필요시 아래처럼 설정 가능
 USER root
