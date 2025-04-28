@@ -15,11 +15,14 @@ from dim.domain import parse_domain
 from dim.logger import parse_logger
 from dim.status import parse_status
 
+from warehouse.writer.fact_writer import write_fact_streams
+from warehouse.writer.dim_writer import write_dim_streams
+
 import sys, os
 
 spark = SparkSession.builder.appName("KafkaStructuredFactParsing").getOrCreate()
 
-sys.path.append('/app')  # 또는 os.getcwd() 사용
+sys.path.append('/app')
 
 df = spark.readStream \
     .format("kafka") \
@@ -36,9 +39,10 @@ df = df.withColumn("timestamp_raw", expr("substring_index(substring_index(log, '
        .withColumn("logger", expr("trim(substring_index(body, ' : ', 1))")) \
        .withColumn("message_raw", expr("trim(substring_index(body, ' : ', -1))"))
 
+# 공통 파싱 이후 timestamp 필드 처리 부분만 수정
 base_df = df.select(
     col("topic"),
-    to_timestamp("timestamp_raw", "yyyy-MM-dd HH:mm:ss").alias("timestamp"),
+    to_timestamp("timestamp_raw", "yyyy-MM-dd HH:mm:ss").cast("timestamp").alias("timestamp"),
     "level",
     "logger",
     expr("regexp_replace(message_raw, '\"}$', '')").alias("message")
@@ -54,15 +58,21 @@ fact_etc = parse_etc(base_df)
 
 dim_user = parse_user(fact_auth, fact_order, fact_payment, fact_notify)
 dim_item = parse_item(fact_inventory, fact_order)
+dim_domain = parse_domain(fact_etc)
 dim_status = parse_status(fact_auth, fact_order, fact_payment, fact_notify, fact_inventory)
 dim_logger = parse_logger(base_df)
 dim_time = parse_time(fact_payment)
-dim_domain = parse_domain(fact_etc)
 
-query = fact_auth.writeStream \
-    .outputMode("append") \
-    .format("console") \
-    .option("truncate", False) \
-    .start()
+# writeStream 실행 → StreamingQuery 리스트로 받음
+fact_queries = write_fact_streams(
+    fact_auth, fact_order, fact_payment, fact_notify, fact_inventory, fact_etc
+)
+dim_queries = write_dim_streams(
+    dim_time, dim_user, dim_item, dim_domain, dim_logger, dim_status
+)
 
-query.awaitTermination()
+# 모든 쿼리에 awaitTermination
+for q in fact_queries + dim_queries:
+    q.awaitTermination()
+
+spark.streams.awaitAnyTermination()

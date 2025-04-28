@@ -48,7 +48,7 @@ services:
     command: >
       /opt/bitnami/spark/bin/spark-submit
       --master spark://spark-master:7077
-      --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0
+      --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0,com.clickhouse:clickhouse-jdbc:0.4.6
       app.py
 
   clickhouse:
@@ -59,6 +59,8 @@ services:
       - "9000:9000"
     volumes:
       - clickhouse_data:/var/lib/clickhouse
+      - ./spark_job/warehouse/create_tables.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./spark_job/warehouse/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
 
   grafana:
     image: grafana/grafana:10.2.2
