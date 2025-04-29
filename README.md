@@ -1,7 +1,7 @@
 # Log Monitoring System
 
 ## 개요
-![grafa](img\grafa.png)
+![grafa](img/grafa.png)
 **Log Monitoring System** 프로젝트는  
 대규모 로그 데이터에 대한 **모니터링, 분석, 처리**를 목표로 하는 **PoC(Proof of Concept)**입니다.  
 
@@ -22,7 +22,7 @@
   빠른 개발 및 테스트를 위해 필수 서비스(Kafka, Spark, ClickHouse 등)를 Docker Compose로 간편하게 실행할 수 있고 수직적인 성능 Customize가 가능합니다.
 
 ## 시스템 아키텍처
-![structure](img\structure.png)
+![structure](img/structure.png)
 
 1. **로그 수집 (Producer)**  
    다양한 로그 소스를 시뮬레이션하여 Streaming API를 통해 Kafka로 전송합니다.
