@@ -1,3 +1,10 @@
+"""
+Log Forwarder
+
+FastAPI 기반으로 구현된 스트리밍 API 서버입니다.
+외부에서 요청된 로그 데이터를 Kafka로 전송하는 역할을 수행합니다.
+"""
+
 import asyncio
 import aiohttp
 from kafka import KafkaProducer

@@ -1,3 +1,9 @@
+"""
+Spark Log Processor
+
+Kafka로부터 로그 스트림을 수신하고, 필요한 컬럼 추출 및 변환 후 ClickHouse에 저장하는 모듈입니다.
+"""
+
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import expr, split, trim, to_timestamp, col, regexp_extract
 
