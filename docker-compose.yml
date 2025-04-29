@@ -35,8 +35,10 @@ services:
     environment:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://spark-master:7077
+      - _JAVA_OPTIONS=-Xms4g -Xmx4g
     depends_on:
       - spark-master
+    mem_limit: 5g
 
   spark-streaming-app:
     build:
