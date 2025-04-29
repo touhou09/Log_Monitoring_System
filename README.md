@@ -44,6 +44,17 @@
 - **Docker Compose**: 개발 및 테스트 환경 관리
 - **Grafana**: 모니터링 및 시각화
 
+## 설치 및 실행 방법
+
+```bash
+# 저장소 클론
+git clone https://github.com/touhou09/Log_Monitoring_System.git
+cd Log_Monitoring_System
+
+# Docker Compose로 환경 구성
+docker-compose up -d
+```
+
 ## 테스트 가이드
 - 다양한 크기와 형태의 로그를 생성하는 Log Simulator
 - 여러 Source에서 데이터를 수집할 수 있도록 Kafka 조정
